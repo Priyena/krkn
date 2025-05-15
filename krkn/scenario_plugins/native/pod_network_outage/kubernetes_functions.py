@@ -121,9 +121,10 @@ def exec_cmd_in_pod(cli, command, pod_name, namespace, container=None):
     return ret
 
 
-def list_pods(cli, namespace, label_selector=None):
+def list_pods(cli, namespace, label_selector=None, exclude_label=None):
     """
-    Function used to list pods in a given namespace and having a certain label
+    Function used to list pods in a given namespace and having a certain label and excluding pods with exclude_label
+    and excluding pods with exclude_label
     """
 
     pods = []
@@ -140,7 +141,13 @@ def list_pods(cli, namespace, label_selector=None):
             % e
         )
         raise e
+    
     for pod in ret.items:
+        # Skip pods with the exclude label if specified
+        if exclude_label and pod.metadata.labels:
+            exclude_key, exclude_value = exclude_label.split('=', 1)
+            if exclude_key in pod.metadata.labels and pod.metadata.labels[exclude_key] == exclude_value:
+                continue
         pods.append(pod.metadata.name)
 
     return pods
