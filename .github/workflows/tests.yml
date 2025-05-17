@@ -152,7 +152,7 @@ jobs:
           path: coverage.json
           if-no-files-found: error
       - name: Check CI results
-        run: grep Fail CI/results.markdown && false || true
+        run: "! grep Fail CI/results.markdown"
   badge:
     permissions:
       contents: write
@@ -192,7 +192,7 @@ jobs:
             cd krkn-lib-docs
             git add .
             git config user.name "krkn-chaos"
-            git config user.email "<>"
+            git config user.email "krkn-actions@users.noreply.github.com"
             git commit -m "[KRKN] Coverage Badge ${GITHUB_REF##*/}" || echo "no changes to commit"
             git push
-      
+
